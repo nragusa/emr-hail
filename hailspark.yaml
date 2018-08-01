@@ -286,6 +286,9 @@ Resources:
           spark.sql.files.maxPartitionBytes: "1099511627776"
           spark.sql.files.openCostInBytes: "1099511627776"
         Configurations: []
+      - Classification: spark
+        ConfigurationProperties:
+          maximizeResourceAllocation: true
       Instances:
         AdditionalMasterSecurityGroups:
         - Fn::GetAtt:

@@ -43,8 +43,11 @@ if [ "$IS_MASTER" = true ]; then
   cd hail/
   # Update JAVA_HOME to hail can build properly
   export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64/
-  ./gradlew -Dspark.version=$SPARK_VERSION shadowJar archiveZip
-
+  if [ "$SPARK_VERSION" = "2.3.0" ] || [ "$SPARK_VERSION" = "2.3.1" ] ; then
+    ./gradlew -Dspark.version=$SPARK_VERSION -Dbreeze.version=0.13.2 -Dpy4j.version=0.10.7 shadowJar archiveZip
+  else
+    ./gradlew -Dspark.version=$SPARK_VERSION shadowJar archiveZip
+  fi
   cp $PWD/build/distributions/hail-python.zip $HOME
   cp $PWD/build/libs/hail-all-spark.jar $HOME
   

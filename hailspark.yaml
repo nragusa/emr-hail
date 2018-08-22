@@ -240,44 +240,76 @@ Resources:
       - Name: Hive
       - Name: Spark
       - Name: Ganglia
+      # - Name: JupyterHub
       BootstrapActions:
-      - Name: Install-decorator
-        ScriptBootstrapAction:
-          Path: file:/usr/bin/sudo
-          Args: 
-          - "pip"
-          - "install"
-          - "decorator"
-      - Name: Build-Hail
-        ScriptBootstrapAction:
-          Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
-          Args:
-          - "--output-path"
-          - !Sub "s3://${HailBuildOutputS3Path}"
-          - "--hail-version"
-          - Ref: HailBuildHailVersion
-          - "--spark-version"
-          - Ref: HailBuildSparkVersion
-      - Name: Install-Python3
-        ScriptBootstrapAction:
-          Path: "s3://emr-hail-0.2-us-east-1/install_python3.sh"
-      - Name: Install-Python-Jupyter
-        ScriptBootstrapAction:
-          Path: s3://aws-bigdata-blog/artifacts/aws-blog-emr-jupyter/install-jupyter-emr5.sh
-          Args:
-          - "--toree"
-          - "--ds-packages"
-          - "--ml-packages"
-          - "--python-packages"
-          - "ggplot"
-          - "--password"
-          - Ref: JupyterPassword
-          - "--port"
-          - Ref: JupyterPort
-          - "--ssl"
-          - "--cached-install"
-          - "--spark-opts"
-          - "--jars /home/hadoop/hail-all-spark.jar"
+        - Name: UpgradePython
+          ScriptBootstrapAction:
+            Path: file:/usr/bin/sudo
+            Args:
+            - "yum"
+            - "-y"
+            - "install"
+            - "python36"
+            - "python36-devel"
+            - "python36-setuptools"
+        - Name: InstallPythonDeps
+          ScriptBootstrapAction:
+            Path: file:/usr/bin/sudo
+            Args:
+            - "pip"
+            - "install"
+            - "pyserial"
+            - "oauth"
+            - "cheetah3"
+            - "argparse"
+            - "PrettyTable"
+            - "wheel"
+            - "pandas"
+            - "parsimonious"
+            - "tornado"
+            # - "jupyter"
+            - "numpy"
+            # - "collections"
+            # - "math"
+            - "pprint"
+            - "bokeh"
+            - "scikit-learn"
+            - "matplotlib"
+            - "ggplot"
+            - "decorator"
+        - Name: DownloadHailBins
+          ScriptBootstrapAction:
+            Path: "s3://emr-hail-0.2-us-east-1/download_hail_bin.sh"
+      # - Name: Build-Hail
+      #   ScriptBootstrapAction:
+      #     Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
+      #     Args:
+      #     - "--output-path"
+      #     - !Sub "s3://${HailBuildOutputS3Path}"
+      #     - "--hail-version"
+      #     - Ref: HailBuildHailVersion
+      #     - "--spark-version"
+      #     - Ref: HailBuildSparkVersion
+      # - Name: Install-Python3
+      #   ScriptBootstrapAction:
+      #     Path: "s3://emr-hail-0.2-us-east-1/install_python3.sh"
+        - Name: Install-Python-Jupyter
+          ScriptBootstrapAction:
+            Path: s3://aws-bigdata-blog/artifacts/aws-blog-emr-jupyter/install-jupyter-emr5.sh
+            Args:
+            - "--toree"
+            - "--ds-packages"
+            - "--ml-packages"
+            - "--python-packages"
+            - "ggplot"
+            - "--password"
+            - Ref: JupyterPassword
+            - "--port"
+            - Ref: JupyterPort
+            - "--ssl"
+            - "--cached-install"
+            - "--spark-opts"
+            - "--jars /home/hadoop/hail-all-spark.jar"
       Configurations:
       - Classification: spark-defaults
         ConfigurationProperties:

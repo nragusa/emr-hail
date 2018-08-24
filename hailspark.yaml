@@ -99,6 +99,11 @@ Parameters:
     Type: String
     Default: m4.xlarge
     AllowedValues:
+      - c5d.xlarge
+      - c5d.2xlarge
+      - c5d.4xlarge
+      - c5d.9xlarge
+      - c5d.18xlarge
       - m4.large
       - m4.xlarge
       - m4.2xlarge
@@ -240,7 +245,6 @@ Resources:
       - Name: Hive
       - Name: Spark
       - Name: Ganglia
-      # - Name: JupyterHub
       BootstrapActions:
         - Name: UpgradePython
           ScriptBootstrapAction:
@@ -277,22 +281,19 @@ Resources:
             - "matplotlib"
             - "ggplot"
             - "decorator"
-        - Name: DownloadHailBins
+        # - Name: DownloadHailBins
+        #   ScriptBootstrapAction:
+        #     Path: "s3://emr-hail-0.2-us-east-1/download_hail_bin.sh"
+        - Name: Build-Hail
           ScriptBootstrapAction:
-            Path: "s3://emr-hail-0.2-us-east-1/download_hail_bin.sh"
-      # - Name: Build-Hail
-      #   ScriptBootstrapAction:
-      #     Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
-      #     Args:
-      #     - "--output-path"
-      #     - !Sub "s3://${HailBuildOutputS3Path}"
-      #     - "--hail-version"
-      #     - Ref: HailBuildHailVersion
-      #     - "--spark-version"
-      #     - Ref: HailBuildSparkVersion
-      # - Name: Install-Python3
-      #   ScriptBootstrapAction:
-      #     Path: "s3://emr-hail-0.2-us-east-1/install_python3.sh"
+            Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
+            Args:
+            - "--output-path"
+            - !Sub "s3://${HailBuildOutputS3Path}"
+            - "--hail-version"
+            - Ref: HailBuildHailVersion
+            - "--spark-version"
+            - Ref: HailBuildSparkVersion
         - Name: Install-Python-Jupyter
           ScriptBootstrapAction:
             Path: s3://aws-bigdata-blog/artifacts/aws-blog-emr-jupyter/install-jupyter-emr5.sh

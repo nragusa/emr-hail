@@ -17,5 +17,6 @@ if [ "$IS_MASTER" = true ]; then
 
   echo "" >> $HOME/.bashrc
   echo "export PYTHONPATH=\${PYTHONPATH}:$HOME/hail-python.zip" >> $HOME/.bashrc
+  echo "export PYSPARK_PYTHON=/usr/bin/python3.6" >> $HOME/.bashrc
   
 fi

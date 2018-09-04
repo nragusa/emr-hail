@@ -260,7 +260,7 @@ Resources:
           ScriptBootstrapAction:
             Path: file:/usr/bin/sudo
             Args:
-            - "pip"
+            - "pip-3.6"
             - "install"
             - "pyserial"
             - "oauth"
@@ -281,19 +281,19 @@ Resources:
             - "matplotlib"
             - "ggplot"
             - "decorator"
-        # - Name: DownloadHailBins
-        #   ScriptBootstrapAction:
-        #     Path: "s3://emr-hail-0.2-us-east-1/download_hail_bin.sh"
-        - Name: Build-Hail
+        - Name: DownloadHailBins
           ScriptBootstrapAction:
-            Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
-            Args:
-            - "--output-path"
-            - !Sub "s3://${HailBuildOutputS3Path}"
-            - "--hail-version"
-            - Ref: HailBuildHailVersion
-            - "--spark-version"
-            - Ref: HailBuildSparkVersion
+            Path: "s3://emr-hail-0.2-us-east-1/download_hail_bin.sh"
+        # - Name: Build-Hail
+        #   ScriptBootstrapAction:
+        #     Path: "s3://emr-hail-0.2-us-east-1/build_hail.sh"
+        #     Args:
+        #     - "--output-path"
+        #     - !Sub "s3://${HailBuildOutputS3Path}"
+        #     - "--hail-version"
+        #     - Ref: HailBuildHailVersion
+        #     - "--spark-version"
+        #     - Ref: HailBuildSparkVersion
         - Name: Install-Python-Jupyter
           ScriptBootstrapAction:
             Path: s3://aws-bigdata-blog/artifacts/aws-blog-emr-jupyter/install-jupyter-emr5.sh
@@ -321,6 +321,7 @@ Resources:
           spark.hadoop.parquet.block.size: "1099511627776"
           spark.sql.files.maxPartitionBytes: "1099511627776"
           spark.sql.files.openCostInBytes: "1099511627776"
+          spark.kryo.registrator: "is.hail.kryo.HailKryoRegistrator"
         Configurations: []
       - Classification: spark
         ConfigurationProperties:

@@ -344,6 +344,8 @@ Resources:
             Ref: CoreNodeCount
           InstanceType:
             Ref: InstanceType
+          BidPrice: 1.728
+          Market: SPOT
           EbsConfiguration:
             EbsOptimized: true
             EbsBlockDeviceConfigs:
